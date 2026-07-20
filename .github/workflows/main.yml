@@ -1,25 +1,24 @@
 name: nara-jangter-alert
-
 on:
   schedule:
     - cron: '0 5 * * 1-5'
   workflow_dispatch:
-
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install requests
-        run: pip install requests
-      - name: Run alert
-        run:  |
-  cd ${{ github.workspace }}
-  python narajangter_alert.py
+      - run: pip install requests
+      - run: |
+          export PYTHONPATH="${PYTHONPATH}:${{ github.workspace }}"
+          python -c "
+import sys
+sys.path.insert(0, '${{ github.workspace }}')
+exec(open('${{ github.workspace }}/narajangter_alert.py').read())
+"
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
