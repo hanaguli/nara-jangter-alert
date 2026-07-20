@@ -1,0 +1,27 @@
+name: 나라장터 모듈입찰 공고 알림
+
+on:
+  schedule:
+    - cron: '0 5 * * 1-5'  # 평일 오후 2시(한국시간) = UTC 5시
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Python 설정
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: 필수 라이브러리 설치
+        run: pip install requests
+      
+      - name: 나라장터 공고 조회 및 알림 발송
+        run: python narajangter_alert.py
+        env:
+          SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
