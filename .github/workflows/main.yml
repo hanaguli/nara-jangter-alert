@@ -17,7 +17,9 @@ jobs:
       - name: Install requests
         run: pip install requests
       - name: Run alert
-        run: python ${{ github.workspace }}/narajangter_alert.py
+        run:  |
+  cd ${{ github.workspace }}
+  python narajangter_alert.py
         env:
           SERVICE_KEY: ${{ secrets.SERVICE_KEY }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
